@@ -30,6 +30,10 @@ public class JSONTokener {
     public static final boolean USE_BIGDECIMAL_JSONTOKENER = Boolean.getBoolean( USE_BIGDECIMAL_JSONTOKENER_KEY );
     protected boolean useBigDecimal = USE_BIGDECIMAL_JSONTOKENER; 
 
+    final static int DEFAULT_OBJECT_KEY_LIMIT = 1000000;
+
+    static int OBJECT_KEY_LIMIT = DEFAULT_OBJECT_KEY_LIMIT;
+
 
     /**
      * The index of the next character.
@@ -43,7 +47,7 @@ public class JSONTokener {
     private String mySource;
 
 
-    private int threshold = -1;
+    private int threshold = OBJECT_KEY_LIMIT;
 
     private int recursionDepth;
 
@@ -55,6 +59,7 @@ public class JSONTokener {
     public JSONTokener(String s) {
         this.myIndex = 0;
         this.mySource = s.trim();
+        this.threshold = OBJECT_KEY_LIMIT;
     }
 
     /**

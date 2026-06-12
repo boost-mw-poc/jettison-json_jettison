@@ -1,6 +1,7 @@
 package org.codehaus.jettison.json;
 
 import junit.framework.TestCase;
+import org.codehaus.jettison.JSONSequenceTooLargeException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -210,5 +211,22 @@ public class JSONObjectTest extends TestCase {
         map.put("request", "{\"exclude\":[\".\",\"?\",\"+\",\"*\",\"|\",\"{\",\"}\",\"[\",\"]\",\"(\",\")\",\"\\\"\",\"\\\\\",\"#\",\"@\",\"&\",\"<\",\">\",\"~\"]}");
         JSONObject jsonObject = new JSONObject(map);
         JSONObject jsonObject1 = new JSONObject(jsonObject.toString());
+    }
+
+    public void testIssue3DefaultObjectKeyLimitIsEnabled() {
+        assertTrue(new JSONTokener("{}").getThreshold() > 0);
+    }
+
+    public void testIssue3DefaultObjectKeyLimitEnforcedForJSONObjectStringConstructor() throws JSONException {
+        int originalLimit = JSONTokener.OBJECT_KEY_LIMIT;
+        JSONTokener.OBJECT_KEY_LIMIT = 2;
+        try {
+            new JSONObject("{\"k1\":1,\"k2\":2,\"k3\":3}");
+            fail("Failure expected when default object key limit is exceeded");
+        } catch (JSONSequenceTooLargeException ex) {
+            assertTrue(ex.getMessage().contains("Threshold has been exceeded"));
+        } finally {
+            JSONTokener.OBJECT_KEY_LIMIT = originalLimit;
+        }
     }
 }
