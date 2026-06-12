@@ -32,7 +32,7 @@ public class JSONTokener {
 
     final static int DEFAULT_OBJECT_KEY_LIMIT = 1000000;
 
-    static int OBJECT_KEY_LIMIT = DEFAULT_OBJECT_KEY_LIMIT;
+    static volatile int OBJECT_KEY_LIMIT = DEFAULT_OBJECT_KEY_LIMIT;
 
 
     /**

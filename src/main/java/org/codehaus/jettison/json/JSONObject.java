@@ -89,7 +89,7 @@ public class JSONObject implements Serializable {
      */
     final static int DEFAULT_RECURSION_DEPTH_LIMIT = 500;
     
-    static int RECURSION_DEPTH_LIMIT = DEFAULT_RECURSION_DEPTH_LIMIT;
+    static volatile int RECURSION_DEPTH_LIMIT = DEFAULT_RECURSION_DEPTH_LIMIT;
 
     /**
      * JSONObject.NULL is equivalent to the value that JavaScript calls null,
@@ -1354,7 +1354,7 @@ public class JSONObject implements Serializable {
      */
     @Deprecated
     public void setRecursionDepthLimit(int newRecursionDepthLimit) {
-        RECURSION_DEPTH_LIMIT = newRecursionDepthLimit;
+        setGlobalRecursionDepthLimit(newRecursionDepthLimit);
     }
 
     /**
@@ -1373,7 +1373,7 @@ public class JSONObject implements Serializable {
      */
     @Deprecated
     public int getRecursionDepthLimit() {
-        return RECURSION_DEPTH_LIMIT;
+        return getGlobalRecursionDepthLimit();
     }
 
      /**

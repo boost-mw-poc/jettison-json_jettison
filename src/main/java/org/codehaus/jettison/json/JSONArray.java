@@ -80,7 +80,7 @@ public class JSONArray implements Serializable {
 
     final static int DEFAULT_ARRAY_LENGTH_LIMIT = 1000000;
 
-    static int ARRAY_LENGTH_LIMIT = DEFAULT_ARRAY_LENGTH_LIMIT;
+    static volatile int ARRAY_LENGTH_LIMIT = DEFAULT_ARRAY_LENGTH_LIMIT;
 
 
     /**
