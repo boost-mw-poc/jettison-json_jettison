@@ -105,12 +105,14 @@ public class JSONArrayTest extends TestCase {
 
     public void testIssue96() throws JSONException
     {
-        try {
-            new JSONArray(new JSONTokener("[\"\\xgg\"]"));
-            fail("Exception expected");
-        } catch (JSONException ex) {
-            assertTrue(ex.getMessage().startsWith("Illegal escape."));
-        }
+        JSONArray array = new JSONArray(new JSONTokener("[\"\\xgg\"]"));
+        assertEquals("xgg", array.getString(0));
+    }
+
+    public void testIssue1NonStandardHexEscapesAreNotExpanded() throws JSONException
+    {
+        JSONArray array = new JSONArray(new JSONTokener("[\"\\x6e\\x6f\\x6e\\x65\"]"));
+        assertEquals("x6ex6fx6ex65", array.getString(0));
     }
 
     public void testRemoveObjectRemovesMatchingValueAndReturnsSameInstance() {

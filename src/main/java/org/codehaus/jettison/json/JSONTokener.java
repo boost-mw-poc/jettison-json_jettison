@@ -261,13 +261,6 @@ public class JSONTokener {
                         throw syntaxError("Illegal escape.");
                     }
                     break;
-                case 'x' :
-                    try {
-                        sb.append((char) Integer.parseInt(next(2), 16));
-                    } catch (NumberFormatException e) {
-                        throw syntaxError("Illegal escape.");
-                    }
-                    break;
                 default:
                     sb.append(c);
                 }
