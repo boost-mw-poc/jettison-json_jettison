@@ -229,4 +229,25 @@ public class JSONObjectTest extends TestCase {
             JSONTokener.OBJECT_KEY_LIMIT = originalLimit;
         }
     }
+
+    public void testIssue4RejectsArrayValuedObjectKeys() {
+        // CVE-2023-5072 analog: an array-valued key would otherwise be stringified at every
+        // serialization level, doubling the escaped characters per nesting level and leading
+        // to an exponential memory blow-up (OutOfMemoryError) from a tiny input.
+        try {
+            new JSONObject("{[1,2,3]:1}");
+            fail("Failure expected when an object key is an array");
+        } catch (JSONException ex) {
+            assertTrue(ex.getMessage().contains("Expected a key"));
+        }
+    }
+
+    public void testIssue4RejectsNestedArrayKeyBlowUp() {
+        try {
+            new JSONObject("{[{[{[1]:1}]:1}]:1}");
+            fail("Failure expected for nested array-valued keys");
+        } catch (JSONException ex) {
+            assertTrue(ex.getMessage().contains("Expected a key"));
+        }
+    }
 }

@@ -221,6 +221,7 @@ public class JSONObject implements Serializable {
             case '}':
                 return;
             case '{':
+            case '[':
                 throw x.syntaxError("Expected a key");                
             default:
                 x.back();
