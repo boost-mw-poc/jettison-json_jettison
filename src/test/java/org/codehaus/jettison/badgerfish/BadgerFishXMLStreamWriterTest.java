@@ -20,6 +20,7 @@ import java.io.StringWriter;
 import junit.framework.TestCase;
 
 import org.codehaus.jettison.AbstractXMLStreamWriter;
+import org.codehaus.jettison.json.JSONObject;
 
 public class BadgerFishXMLStreamWriterTest extends TestCase {
     public void testRootWithText() throws Exception {
@@ -151,6 +152,40 @@ public class BadgerFishXMLStreamWriterTest extends TestCase {
         
         assertJSONEquals("{\"alice\":{\"@charlie\":\"david\",\"$\":\"bob\"}}", 
                          strWriter.toString());
+    }
+
+    public void testWhitespaceOnlyTextIsPreserved() throws Exception {
+        StringWriter strWriter = new StringWriter();
+        AbstractXMLStreamWriter w = new BadgerFishXMLStreamWriter(strWriter);
+
+        w.writeStartDocument();
+        w.writeStartElement("alice");
+        w.writeCharacters("   ");
+        w.writeEndElement();
+        w.writeEndDocument();
+
+        w.close();
+        strWriter.close();
+
+        JSONObject json = new JSONObject(strWriter.toString());
+        assertEquals("   ", json.getJSONObject("alice").getString("$"));
+    }
+
+    public void testEmptyTextIsIgnored() throws Exception {
+        StringWriter strWriter = new StringWriter();
+        AbstractXMLStreamWriter w = new BadgerFishXMLStreamWriter(strWriter);
+
+        w.writeStartDocument();
+        w.writeStartElement("alice");
+        w.writeCharacters("");
+        w.writeEndElement();
+        w.writeEndDocument();
+
+        w.close();
+        strWriter.close();
+
+        JSONObject json = new JSONObject(strWriter.toString());
+        assertFalse(json.getJSONObject("alice").has("$"));
     }
 
     public void testDefaultNamespace() throws Exception {
